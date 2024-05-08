@@ -1,0 +1,12 @@
+.dropdown-menu {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    width: 300px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    position: absolute;
+    right: 20px;
+    top: 60px;
+    z-index: 1000;
+}
