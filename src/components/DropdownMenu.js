@@ -29,6 +29,12 @@ function DropdownMenu() {
                     <span className={active === 'rewrite' ? 'active' : ''}>Rewrite</span>
                 </button>
             </div>
+            {active === 'detect' && (
+                <div className="action-buttons">
+                    <button onClick={() => console.log('Retrying...')}>Retry</button>
+                    <button onClick={() => console.log('Clearing...')}>Clear</button>
+                </div>
+            )}
             {active === 'replace' && (
                 <div>
                     <input
@@ -43,15 +49,25 @@ function DropdownMenu() {
                         value={replacementWords}
                         onChange={(e) => setReplacementWords(e.target.value)}
                     />
+                    <div className="action-buttons">
+                        <button onClick={() => console.log('Replacing...')}>Apply</button>
+                        <button onClick={() => { setTargetWords(''); setReplacementWords(''); }}>Reset</button>
+                    </div>
                 </div>
             )}
             {active === 'rewrite' && (
-                <textarea
-                    placeholder="Placeholder text after capture from screenshot."
-                    value={extractedText}
-                    onChange={(e) => setExtractedText(e.target.value)}
-                    style={{ width: '100%', minHeight: '100px' }}
-                />
+                <div>
+                    <textarea
+                        placeholder="Placeholder text after capture from screenshot."
+                        value={extractedText}
+                        onChange={(e) => setExtractedText(e.target.value)}
+                        style={{ width: '100%', minHeight: '120px' }}
+                    />
+                    <div className="action-buttons">
+                        <button onClick={() => console.log('Rewritting...')}>Apply</button>
+                        <button onClick={() => console.log('Recapturing...')}>Recapture</button>
+                    </div>
+                </div>
             )}
         </div>
     );
