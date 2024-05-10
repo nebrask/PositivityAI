@@ -15,6 +15,17 @@ function DropdownMenu() {
         }
     };
 
+    const handleExport = () => {
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        dropdownMenu.classList.add('hide-on-print');
+
+        window.print();
+
+        setTimeout(() => {
+            dropdownMenu.classList.remove('hide-on-print');
+        }, 500);
+    };
+
     return (
         <div className="dropdown-menu">
             <h1>PositivityAI</h1>
@@ -70,9 +81,8 @@ function DropdownMenu() {
                     </div>
                 </div>
             )}
-
-        <div className="export-button">
-                <button onClick={() => console.log('Exporting...')}>
+            <div className="export-button">
+                <button onClick={handleExport}>
                     <img src="/assets/export.png" alt="Export" />
                 </button>
             </div>

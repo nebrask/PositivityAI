@@ -5,13 +5,20 @@
     width: 350px;
     background-color: white;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    position: fixed;  /* Ensures the dropdown is positioned relative to the viewport */
-    right: 20px;  /* Adjust this value to align with the browser extension icon */
-    top: 60px;   /* Adjust this value based on your actual UI layout */
+    position: fixed;
+    right: 20px;
+    top: 60px;
     z-index: 1000;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+@media print {
+    .hide-on-print {
+        display: none;
+    }
+
 }
 
 .button-group {
