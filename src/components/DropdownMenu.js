@@ -29,6 +29,7 @@ function DropdownMenu() {
                     <span className={active === 'rewrite' ? 'active' : ''}>Rewrite</span>
                 </button>
             </div>
+            
             {active === 'detect' && (
                 <div className="action-buttons">
                     <button onClick={() => console.log('Retrying...')}>Retry</button>
@@ -69,6 +70,12 @@ function DropdownMenu() {
                     </div>
                 </div>
             )}
+
+        <div className="export-button">
+                <button onClick={() => console.log('Exporting...')}>
+                    <img src="/assets/export.png" alt="Export" />
+                </button>
+            </div>
         </div>
     );
 }
