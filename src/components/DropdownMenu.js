@@ -1,3 +1,5 @@
+/* global chrome */
+
 import React, { useState } from 'react';
 import '../styles/DropdownMenu.css';
 
@@ -16,16 +18,39 @@ function DropdownMenu() {
     };
 
     const handleExport = () => {
-        const dropdownMenu = document.querySelector('.dropdown-menu');
-        dropdownMenu.classList.add('hide-on-print');
-
-        window.print();
-
+        console.log("Starting to print");
         setTimeout(() => {
-            dropdownMenu.classList.remove('hide-on-print');
+            try {
+                window.print();
+                console.log("Print command worked!");
+            } catch (error) {
+                console.error("Print error:", error);
+            }
         }, 500);
     };
+    
+    const handleReplace = () => {
+        chrome.storage.sync.get({replacementRules: []}, (data) => {
+            let rules = Array.isArray(data.replacementRules)?data.replacementRules: [];
 
+            rules.push({
+                targetWords: targetWords,
+                replacementWords: replacementWords
+            });
+    
+            chrome.storage.sync.set({replacementRules: rules}, () => {
+                console.log('Replacement rules saved');
+            });
+    
+            chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+                chrome.tabs.sendMessage(tabs[0].id, {
+                    action: "applyAllReplacements",
+                    rules: rules
+                });
+            });
+        });
+    };
+     
     return (
         <div className="dropdown-menu">
             <h1>PositivityAI</h1>
@@ -62,7 +87,7 @@ function DropdownMenu() {
                         onChange={(e) => setReplacementWords(e.target.value)}
                     />
                     <div className="action-buttons">
-                        <button onClick={() => console.log('Replacing...')}>Apply</button>
+                        <button onClick={handleReplace}>Apply</button>
                         <button onClick={() => { setTargetWords(''); setReplacementWords(''); }}>Reset</button>
                     </div>
                 </div>
@@ -83,7 +108,7 @@ function DropdownMenu() {
             )}
             <div className="export-button">
                 <button onClick={handleExport}>
-                    <img src="/assets/export.png" alt="Export" />
+                    <img src="./assets/export.png" alt="Export" />
                 </button>
             </div>
         </div>
