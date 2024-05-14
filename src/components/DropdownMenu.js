@@ -30,27 +30,38 @@ function DropdownMenu() {
     };
     
     const handleReplace = () => {
-        chrome.storage.sync.get({replacementRules: []}, (data) => {
-            let rules = Array.isArray(data.replacementRules)?data.replacementRules: [];
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+            const currentUrl = tabs[0].url;
+            chrome.storage.sync.get({replacementRules: []}, (data) => {
+                let rules = Array.isArray(data.replacementRules) ? data.replacementRules : [];
+                rules.push({
+                    url: currentUrl,
+                    targetWords: targetWords,
+                    replacementWords: replacementWords
+                });
 
-            rules.push({
-                targetWords: targetWords,
-                replacementWords: replacementWords
-            });
-    
-            chrome.storage.sync.set({replacementRules: rules}, () => {
-                console.log('Replacement rules saved');
-            });
-    
-            chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-                chrome.tabs.sendMessage(tabs[0].id, {
-                    action: "applyAllReplacements",
-                    rules: rules
+                chrome.storage.sync.set({replacementRules: rules}, () => {
+                    console.log('Updated replacement rules saved');
+                    chrome.tabs.sendMessage(tabs[0].id, {
+                        action: "applyAllReplacements",
+                        rules: rules
+                    });
                 });
             });
         });
     };
-     
+    
+    const handleUndo = () => {
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+            chrome.tabs.sendMessage(tabs[0].id, {
+                action: "undoChange"
+            }, response => {
+                console.log(response.status);
+            });
+        });
+    };
+    
+
     return (
         <div className="dropdown-menu">
             <h1>PositivityAI</h1>
@@ -88,7 +99,7 @@ function DropdownMenu() {
                     />
                     <div className="action-buttons">
                         <button onClick={handleReplace}>Apply</button>
-                        <button onClick={() => { setTargetWords(''); setReplacementWords(''); }}>Reset</button>
+                        <button onClick={handleUndo}>Undo</button>
                     </div>
                 </div>
             )}
