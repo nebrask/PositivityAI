@@ -13,7 +13,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "build": "react-scripts build && npx copyfiles manifest.json contentScript.js build/",
+    "build-all": "npm run build-extension && react-scripts build && npx copyfiles -u 1 dist/* build/ && npx copyfiles manifest.json contentScript.js build/",
+    "build-extension": "webpack --config webpack.config.js",
+    "watch-extension": "webpack --watch --config webpack.config.js",
     "start": "react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -37,6 +39,9 @@
     ]
   },
   "devDependencies": {
-    "copyfiles": "^2.4.1"
+    "copyfiles": "^2.4.1",
+    "dotenv-webpack": "^8.1.0",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
   }
 }

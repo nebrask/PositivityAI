@@ -61,6 +61,34 @@ function DropdownMenu() {
         });
     };
     
+    function handleDetect() {
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+            if (!tabs.length) {
+                console.error("No active tabs found.");
+                return;
+            }
+
+            const activeTab = tabs[0];
+            chrome.scripting.executeScript({
+                target: {tabId: activeTab.id},
+                function: getPageText,
+            }, (results) => {
+                if (results && results[0] && results[0].result) {
+                    chrome.runtime.sendMessage({
+                        action: "analyzeText",
+                        text: results[0].result,
+                        tabId: activeTab.id
+                    });
+                }
+            });
+        });
+    }
+    
+    
+    function getPageText() {
+        return document.body.innerText;
+    }
+    
 
     return (
         <div className="dropdown-menu">
@@ -79,7 +107,7 @@ function DropdownMenu() {
             
             {active === 'detect' && (
                 <div className="action-buttons">
-                    <button onClick={() => console.log('Retrying...')}>Retry</button>
+                    <button onClick={handleDetect}>Analyze</button>
                     <button onClick={() => console.log('Clearing...')}>Clear</button>
                 </div>
             )}
