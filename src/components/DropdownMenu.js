@@ -90,6 +90,18 @@ function DropdownMenu() {
     }
     
 
+    const handleClear = () => {
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+            chrome.tabs.sendMessage(tabs[0].id, {
+                action: "clearHighlights"
+            }, response => {
+                console.log("Clear response: ", response);
+            });
+        });
+    };
+    
+    
+
     return (
         <div className="dropdown-menu">
             <h1>PositivityAI</h1>
@@ -108,7 +120,7 @@ function DropdownMenu() {
             {active === 'detect' && (
                 <div className="action-buttons">
                     <button onClick={handleDetect}>Analyze</button>
-                    <button onClick={() => console.log('Clearing...')}>Clear</button>
+                    <button onClick={handleClear}>Clear</button>
                 </div>
             )}
             {active === 'replace' && (
