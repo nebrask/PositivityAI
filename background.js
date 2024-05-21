@@ -38,7 +38,8 @@ chrome.runtime.onMessage.addListener(function(request, sendResponse) {
             if (request.tabId != null) {
                 chrome.tabs.sendMessage(request.tabId, {
                     action: "displaySentiment",
-                    data: response
+                    data: response,
+                    sensitivity: request.sensitivity
                 });
             } else {
                 console.error('No tab was identified');

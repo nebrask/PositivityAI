@@ -16,12 +16,18 @@ function undoReplacement() {
     }
 }
 
-function highlightText(sentimentData) {
+function highlightText(sentimentData, sensitivity) {
     let modifiedText = document.body.innerHTML;
+    let threshold = Math.abs(1 - sensitivity * 0.2);
+
+    console.log(`Sensitivity: ${sensitivity}, Threshold: ${threshold}`);
+
     sentimentData.sentences.forEach(sentence => {
-        const regex = new RegExp(sentence.text.content, "gi");
-        const replacement = `<span style="background-color: ${sentence.sentiment.score > 0 ? 'green' : 'red'};" class="highlight">${sentence.text.content}</span>`;
-        modifiedText = modifiedText.replace(regex, replacement);
+        if (Math.abs(sentence.sentiment.score) >= threshold) {
+            const regex = new RegExp(sentence.text.content, "gi");
+            const replacement = `<span style="background-color: ${sentence.sentiment.score > 0 ? 'green' : 'red'};" class="highlight">${sentence.text.content}</span>`;
+            modifiedText = modifiedText.replace(regex, replacement);
+        }
     });
     document.body.innerHTML = modifiedText;
 }
@@ -37,22 +43,26 @@ function clearHighlights() {
     });
 }
 
-
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.action === "displaySentiment") {
-        highlightText(request.data);
-    } else if (request.action === "applyAllReplacements") {
-        const currentUrl = window.location.href;
-        applyReplacements(request.rules, currentUrl);
-        highlightText(request.data);
-        sendResponse({status: "Replacements applied, text re-analyzed"});
-    } else if (request.action === "undoChange") {
-        undoReplacement();
-        highlightText(request.data);
-        sendResponse({status: "Last change undone"});
-    } else if (request.action === "clearHighlights") {
-        clearHighlights();
-        sendResponse({status: "Highlights cleared"});
+chrome.runtime.onMessage.addListener(function(request, sendResponse) {
+    switch (request.action) {
+        case "displaySentiment":
+            clearHighlights();
+            highlightText(request.data, request.sensitivity || 3);
+            sendResponse({status: "Text highlighted according to sensitivity"});
+            break;
+        case "applyAllReplacements":
+            const currentUrl = window.location.href;
+            applyReplacements(request.rules, currentUrl);
+            sendResponse({status: "Replacement words applied"});
+            break;
+        case "undoChange":
+            undoReplacement();
+            sendResponse({status: "Last change undone"});
+            break;
+        case "clearHighlights":
+            clearHighlights();
+            sendResponse({status: "Highlights cleared"});
+            break;
     }
 });
 

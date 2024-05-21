@@ -8,6 +8,7 @@ function DropdownMenu() {
     const [targetWords, setTargetWords] = useState('');
     const [replacementWords, setReplacementWords] = useState('');
     const [extractedText, setExtractedText] = useState('');
+    const [sensitivity, setSensitivity] = useState(3);
 
     const toggleActive = (buttonName) => {
         if (active === buttonName) {
@@ -61,29 +62,32 @@ function DropdownMenu() {
         });
     };
     
-    function handleDetect() {
+    const handleDetect = () => {
         chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-            if (!tabs.length) {
-                console.error("No active tabs found.");
-                return;
-            }
-
             const activeTab = tabs[0];
-            chrome.scripting.executeScript({
-                target: {tabId: activeTab.id},
-                function: getPageText,
-            }, (results) => {
-                if (results && results[0] && results[0].result) {
-                    chrome.runtime.sendMessage({
-                        action: "analyzeText",
-                        text: results[0].result,
-                        tabId: activeTab.id
-                    });
-                }
+            chrome.tabs.sendMessage(activeTab.id, { action: "clearHighlights" }, () => {
+                chrome.scripting.executeScript({
+                    target: {tabId: activeTab.id},
+                    function: getPageText,
+                }, (results) => {
+                    if (results && results[0] && results[0].result) {
+                        chrome.runtime.sendMessage({
+                            action: "analyzeText",
+                            text: results[0].result,
+                            sensitivity: sensitivity,
+                            tabId: activeTab.id
+                        });
+                    }
+                });
             });
         });
-    }
+    };
     
+    
+    const sensitivityChange = (event) => {
+        setSensitivity(parseInt(event.target.value, 10));
+    };
+
     
     function getPageText() {
         return document.body.innerText;
@@ -118,9 +122,13 @@ function DropdownMenu() {
             </div>
             
             {active === 'detect' && (
-                <div className="action-buttons">
-                    <button onClick={handleDetect}>Analyze</button>
-                    <button onClick={handleClear}>Clear</button>
+                
+                <div>
+                    <input type="range" min="1" max="5" className="sensitivity-slider" value={sensitivity} onChange={sensitivityChange} />
+                    <div className="action-buttons">
+                        <button onClick={handleDetect}>Analyze</button>
+                        <button onClick={handleClear}>Clear</button>
+                    </div>
                 </div>
             )}
             {active === 'replace' && (
