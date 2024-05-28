@@ -1,6 +1,6 @@
 /* global chrome */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/DropdownMenu.css';
 
 function DropdownMenu() {
@@ -9,6 +9,21 @@ function DropdownMenu() {
     const [replacementWords, setReplacementWords] = useState('');
     const [extractedText, setExtractedText] = useState('');
     const [sensitivity, setSensitivity] = useState(3);
+
+
+    useEffect(() => {
+        const ocrResult = (request, sendResponse) => {
+            if (request.action === "ocrResult") {
+                setExtractedText(request.text);
+                sendResponse({status: "OCR text received"});
+            }
+            return true;
+        };
+
+        chrome.runtime.onMessage.addListener(ocrResult);
+        return () => chrome.runtime.onMessage.removeListener(ocrResult);
+    }, []);
+
 
     const toggleActive = (buttonName) => {
         if (active === buttonName) {
@@ -104,8 +119,19 @@ function DropdownMenu() {
         });
     };
     
-    
+    const handleRewrite = () => {
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+            if (!tabs.length) {
+                console.error("No active tabs");
+                return;
+            }
 
+            const activeTab = tabs[0];
+            chrome.tabs.sendMessage(activeTab.id, { action: "initiateCapture" });
+        });
+    };
+    
+    
     return (
         <div className="dropdown-menu">
             <h1>PositivityAI</h1>
@@ -116,7 +142,7 @@ function DropdownMenu() {
                 <button onClick={() => toggleActive('replace')}>
                     <span className={active === 'replace' ? 'active' : ''}>Replace</span>
                 </button>
-                <button onClick={() => toggleActive('rewrite')}>
+                <button onClick={handleRewrite}>
                     <span className={active === 'rewrite' ? 'active' : ''}>Rewrite</span>
                 </button>
             </div>
