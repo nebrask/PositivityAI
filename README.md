@@ -35,16 +35,16 @@ PositivityAI is a Chrome extension designed to enhance the positivity of web con
     ```
 3. **Install Dependencies**:
 
-  Install all the necessary dependencies by running:
-  ```
-  npm install
-  ```
+    Install all the necessary dependencies by running:
+    ```
+    npm install
+    ```
 4. **Build the extension**:
    
-  Build the project using the appropriate npm script:
-  ```
-  npm run build-all
-  ```
+    Build the project using the appropriate npm script:
+    ```
+    npm run build-all
+    ```
 
 ## Loading the Extension in Developer Mode
 
