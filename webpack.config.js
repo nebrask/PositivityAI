@@ -4,7 +4,7 @@ module.exports = {
   mode: 'development',
   devtool: 'source-map',
   entry: {
-    background: './background.js',
+    background: './src/scripts/background.js',
   },
   output: {
     path: __dirname + '/dist',
