@@ -46,7 +46,7 @@ function SentimentControl() {
         <div>
             <input type="range" min="1" max="5" className="sensitivity-slider" value={sensitivity} onChange={sensitivityChange} />
             <div className="action-buttons">
-                <button onClick={handleDetect}>Analyze</button>
+                <button onClick={handleDetect}>Detect</button>
                 <button onClick={handleClear}>Clear</button>
             </div>
         </div>

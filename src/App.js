@@ -14,10 +14,13 @@ function App() {
 
     return (
         <div className="dropdown-menu">
-            <h1>PositivityAI</h1>
-            <div className="button-group">
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <img src={"./assets/icon128.png"} alt="PositivityAI Logo" style={{ marginRight: 10 }} />
+                <h1>PositivityAI</h1>
+            </div>
+            <div className="main-button">
                 <button onClick={() => toggleActive('detect')}>
-                    <span className={active === 'detect' ? 'active' : ''}>Detect</span>
+                    <span className={active === 'detect' ? 'active' : ''}>Analyze</span>
                 </button>
                 <button onClick={() => toggleActive('replace')}>
                     <span className={active === 'replace' ? 'active' : ''}>Replace</span>

@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    font-family: Arial, sans-serif;
 }
 
 .dropdown-menu {
@@ -15,47 +16,25 @@ body {
     align-items: center;
 }
 
-.button-group {
+.dropdown-menu h1 {
     display: flex;
-    justify-content: space-between;
-    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 22px;
+    font-family: 'Arial Black', 'Gadget', sans-serif;
 }
 
-.dropdown-menu button {
-    padding: 8px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background: gray;
-    margin: 0 10px;
-    position: relative;
-    overflow: hidden;
-    color: white;
-    white-space: nowrap;
+.dropdown-menu img {
+    height: 45px;
+    width: auto;
+    margin-right: 1px;
 }
 
-.dropdown-menu button span {
-    color: white;
-    position: relative;
-    transition: color 0.2s ease;
+.dropdown-menu .sensitivity-slider {
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
-.dropdown-menu button span::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: -5px;
-    left: 50%;
-    background-color: white;
-    transition: all 0.3s ease;
-}
-
-.dropdown-menu button:hover span::after,
-.dropdown-menu button span.active::after {
-    width: 100%;
-    left: 0;
-}
 
 .dropdown-menu input,
 .dropdown-menu textarea {
@@ -64,11 +43,68 @@ body {
     margin-bottom: 10px;
 }
 
+.main-button {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.main-button button {
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    background: white;
+    margin: 0 10px;
+    position: relative;
+    overflow: hidden;
+    color: black;
+    white-space: nowrap;
+}
+
+.main-button button span {
+    color: black;
+    position: relative;
+    transition: color 0.2s ease;
+    display: inline-block;
+}
+
+.main-button button span::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 3px;
+    bottom: -5px;
+    left: 50%;
+    background-color: #0AC15F;
+    transition: all 0.3s ease;
+}
+
+.main-button button:hover span::after,
+.main-button button span.active::after {
+    width: 100%;
+    left: 0;
+}
+
 .action-buttons {
     display: flex;
     justify-content: center;
     width: 100%;
     margin-top: 10px;
+}
+
+.action-buttons button {
+    padding: 6px 17px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #929292;
+    margin: 0 10px;
+    position: relative;
+    overflow: hidden;
+    color: white;
+    white-space: nowrap;
 }
 
 .export-button {
